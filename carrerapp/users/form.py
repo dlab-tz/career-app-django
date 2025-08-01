@@ -1,1 +1,0 @@
-user = User.objects.get(username='Aminata'
