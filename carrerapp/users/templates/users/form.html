@@ -1,0 +1,10 @@
+{% Block Content %}
+<h1>Update Profile</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock %}
