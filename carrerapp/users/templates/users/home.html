@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Carrier Portal</title>
+    </head>
+    <body>
+        <div class="container mt-5">
+            <h2>Carrier Entry Form</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn-btn-primary">Save</button>
+            </form>
+        </div>
+    </body>
+</html>
