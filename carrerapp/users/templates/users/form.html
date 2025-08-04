@@ -1,10 +1,14 @@
-{% Block Content %}
-<h1>Update Profile</h1>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
-
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Career Tracking Form</title>
+</head>
+<body>
+    <h1>Enter Your Details</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
