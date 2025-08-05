@@ -6,9 +6,42 @@
 <body>
     <h1>Enter Your Details</h1>
     <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
+    {% csrf_token %}
+    {{ form.name.label }} {{ form.name }}<br><br>
+
+    {{ form.works_overseas.label }} {{ form.works_overseas }}<br><br>
+
+    <div id="region-field">
+        {{ form.region.label }} {{ form.region }}<br><br>
+    </div>
+
+    <div id="country-field" style="display:none;">
+        {{ form.country.label }} {{ form.country }}<br><br>
+    </div>
+
+    <button type="submit">Save</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkbox = document.querySelector('input[name="works_overseas"]');
+    const regionField = document.getElementById('region-field');
+    const countryField = document.getElementById('country-field');
+
+    function toggleFields() {
+        if (checkbox.checked) {
+            regionField.style.display = 'none';
+            countryField.style.display = 'block';
+        } else {
+            regionField.style.display = 'block';
+            countryField.style.display = 'none';
+        }
+    }
+
+    checkbox.addEventListener('change', toggleFields);
+    toggleFields();
+});
+</script>
+
 </body>
 </html>
