@@ -1,47 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Career Tracking Form</title>
+    <meta charset="UTF-8">
+    <title>Carrier Portal - Submit Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            text-align: center;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .right-align {
+            margin-left: auto;
+        }
+        form {
+            display: inline-block;
+            text-align: left;
+            margin-top: 20px;
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+        .form-inline {
+            display: flex;
+            gap: 10px;
+        }
+        .right-button {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
 </head>
 <body>
-    <h1>Enter Your Details</h1>
-    <form method="POST">
-    {% csrf_token %}
-    {{ form.name.label }} {{ form.name }}<br><br>
 
-    {{ form.works_overseas.label }} {{ form.works_overseas }}<br><br>
-
-   
-    <div id="country-field" style="display:none;">
-        {{ form.country.label }}:{{ form.country }}<br><br>
+    <div class="top-bar">
+        <h2 style="flex: 1; text-align: center;"><b>Welcome to Carrier Portal</b></h2>
+        <a href="/admin/"><button>Sign In</button></a>
     </div>
+    <hr>
 
-     <div id="region-field">
-        {{ form.region.label }}:{{ form.region }}<br><br>
-    </div>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <label for="name">Name:</label><br>
+            <input type="text" name="name" required><br><br>
 
+            <label for="dob">Date of Birth:</label><br>
+            <input type="date" name="dob" required><br><br>
 
+            <div class="form-inline">
+                <div>
+                    <label for="region">Region:</label><br>
+                    <input type="text" name="region" required>
+                </div>
+                <div>
+                    <label for="district">District:</label><br>
+                    <input type="text" name="district" required>
+                </div>
+            </div><br>
 
-    <button type="submit">Save</button>
-</form>
+            <label for="email">Email:</label><br>
+            <input type="email" name="email" required><br><br>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const checkbox = document.querySelector('input[name="works_overseas"]');
-    const countryField = document.getElementById('country-field');
+            <label>Have you studied overseas?</label><br>
+            <input type="radio" name="oversea" value="yes" onclick="document.getElementById('country').style.display='block';"> Yes
+            <input type="radio" name="oversea" value="no" onclick="document.getElementById('country').style.display='none';"> No<br><br>
 
-    function toggleFields() {
-        if (checkbox.checked) {
-            countryField.style.display = 'block';
-        } else {
-            countryField.style.display = 'none';
-        }
-    }
+            <div id="country" style="display:none;">
+                <label for="country">Where have you studied:</label><br>
+                <input type="text" name="country"><br><br>
+            </div>
 
-    checkbox.addEventListener('change', toggleFields);
-    toggleFields();
-});
-</script>
+            <label for="education_level">Education Level:</label><br>
+            {{ form.education_level }}<br><br>
+
+            <label for="career_field">Career Field:</label><br>
+            {{ form.career_field }}<br><br>
+
+            <label for="position">Position you held before:</label><br>
+            <input type="text" name="position"><br><br>
+
+            <label for="work_done">Work you have done:</label><br>
+            <textarea name="work_done" rows="3"></textarea><br><br>
+
+            <label for="organization">Organization name:</label><br>
+            <input type="text" name="organization"><br><br>
+        </div>
+
+        <div class="right-button">
+            <button type="submit">Save</button>
+        </div>
+    </form>
 
 </body>
 </html>
