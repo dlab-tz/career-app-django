@@ -4,7 +4,10 @@ from  .models import UserProfile
 class UserProfileForm (forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['name', 'works_overseas', 'region', 'country']
+        fields = ['name', 'dob', 'region', 'district', 'email',
+            'oversea', 'country', 'education_level',
+            'career_field', 'position', 'work_done', 'organization']
+        
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Enter your name'}),
             'region': forms.TextInput(attrs={'placeholder': 'Enter your region'}),
