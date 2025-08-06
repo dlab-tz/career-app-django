@@ -39,5 +39,11 @@ class UserProfile(models.Model):
     education_level = models.CharField(max_length=20, choices=EDUCATION_LEVEL_CHOICES)
     career_field = models.CharField(max_length=50, choices=CAREER_CHOICES)
 
-    def __str__(self):
+    
+    works_locally = models.BooleanField(default=True)
+    works_overseas = models.BooleanField(default=False)
+    region = models.CharField(max_length=100, blank=True, null=True)  # For local workers
+    country = models.CharField(max_length=100, blank=True, null=True)  # For overseas workers
+
+def __str__(self):
         return self.name
