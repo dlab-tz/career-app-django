@@ -39,6 +39,7 @@ class UserProfile(models.Model):
     dob = models.DateField(null=True, blank=True)  # allow null for existing records
     region = models.CharField(max_length=50, default='Unknown Region')
     district = models.CharField(max_length=50, default='Unknown District')
+    phone_no = models.CharField(max_length=20,blank=True ,null=True)
     email = models.EmailField(default='unknown@example.com')
     oversea = models.BooleanField(default=False)
     country= models.CharField(max_length=100, blank=True, null=True)
