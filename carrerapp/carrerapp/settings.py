@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-t73b3r!1oalsie)d9#412lyu^bql-6d89puu)!3qd#qs+hd2+g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["9abd65b02ac1.ngrok-free.app","127.0.0.1", "localhost",]
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'users',
 
 ]
@@ -117,9 +118,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'sms.mussasaid@gmail.com'
+EMAIL_HOST_PASSWORD = 'mttaetvgfwwgvokh'  # from Google App Passwords
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+SITE_ID = 1

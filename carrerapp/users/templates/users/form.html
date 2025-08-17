@@ -1,104 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>Carrier Portal - Submit Profile</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            text-align: center;
+             font-family: Arial, sans-serif;
+            background: url("{% static 'users/images/Team.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+             margin: 0;
+            padding: 0;
         }
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 15px 30px;
+            background:  #aa9a30b7;
+            color: white;
         }
-        .right-align {
-            margin-left: auto;
+        .top-bar h2 {
+            margin: 0;
+            flex: 1;
+            text-align: center;
+        }
+        .top-bar button {
+            background: white;
+            color:  #cfb927b7;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .top-bar button:hover {
+            background: #e2e6ea;
+        }
+        .card {
+            background: white;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         form {
-            display: inline-block;
             text-align: left;
-            margin-top: 20px;
         }
-        .form-section {
-            margin-bottom: 20px;
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        input, select, textarea {
+            padding: 8px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-inline input,
+        .form-inline select {
+        width: 100%; 
         }
         .form-inline {
             display: flex;
             gap: 10px;
         }
+        .form-inline div {
+            flex: 1;
+        }
         .right-button {
             display: flex;
             justify-content: flex-end;
+        }
+        .right-button button {
+            background:  #cfb927b7;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .right-button button:hover {
+            background: #cfb927b7;
         }
     </style>
 </head>
 <body>
 
     <div class="top-bar">
-        <h2 style="flex: 1; text-align: center;"><b>Welcome to Carrier Portal</b></h2>
+        <h2><b>Welcome to Carrier Portal</b></h2>
         <a href="/admin/"><button>Sign In</button></a>
     </div>
-    <hr>
 
-    <form method="post">
-        {% csrf_token %}
-        
-        <div class="form-section">
-            <label for="name">Name:</label><br>
-            <input type="text" name="name" required><br><br>
+    <div class="card">
+        <form method="post" action="{% url 'save_profile' %}">
+            {% csrf_token %}
+            
+            <label for="name">Name:</label>
+            <input type="text" name="name" required>
 
-            <label for="dob">Date of Birth:</label><br>
-            <input type="date" name="dob" required><br><br>
+            <label for="dob">Date of Birth:</label>
+            <input type="date" name="dob" required>
 
             <div class="form-inline">
                 <div>
-                    <label for="region">Region:</label><br>
+                    <label for="region">Region:</label>
                     <input type="text" name="region" required>
                 </div>
                 <div>
-                    <label for="district">District:</label><br>
+                    <label for="district">District:</label>
                     <input type="text" name="district" required>
                 </div>
-            </div><br>
-
-            <label for = "phone_no">Phone No:</label>
-            <input type = "text" name = "phone_no" required><br><br>
-
-            <label for="email">Email:</label>
-            <input type="email" name="email" required><br><br>
-
-            <label>Have you studied overseas?</label><br>
-            <input type="radio" name="oversea" value="yes" onclick="document.getElementById('country').style.display='block';"> Yes
-            <input type="radio" name="oversea" value="no" onclick="document.getElementById('country').style.display='none';"> No<br><br>
-
-            <div id="country" style="display:none;">
-                <label for="country">Where have you studied:</label><br>
-                <input type="text" name="country"><br><br>
             </div>
 
-            <label for="education_level">Education Level:</label><br>
-            {{ form.education_level }}<br><br>
+            <label for="phone_no">Phone No:</label>
+            <input type="text" name="phone_no" required>
 
-            <label for="career_field">Career Field:</label><br>
-            {{ form.career_field }}<br><br>
+            <label for="email">Email:</label>
+            <input type="email" name="email" required>
 
-            <label for="position">Position you held before:</label><br>
-            <input type="text" name="position"><br><br>
+            <label>Have you studied overseas?</label>
+            <input type="radio" name="oversea" value="yes" onclick="document.getElementById('country').style.display='block';"> Yes
+            <input type="radio" name="oversea" value="no" onclick="document.getElementById('country').style.display='none';"> No
 
-            <label for="work_done">Work you have done:</label><br>
-            <textarea name="work_done" rows="3"></textarea><br><br>
+            <div id="country" style="display:none;">
+                <label for="country">Where have you studied:</label>
+                <input type="text" name="country">
+            </div>
 
-            <label for="organization">Organization name:</label><br>
-            <input type="text" name="organization"><br><br>
-        </div>
+            <label for="education_level">Education Level:</label>
+            {{ form.education_level }}
 
-        <div class="right-button">
-            <button type="submit">Save</button>
-        </div>
-    </form>
+            <label for="career_field">Career Field:</label>
+            {{ form.career_field }}
+
+            <label for="position">Position you held before:</label>
+            <input type="text" name="position">
+
+            <label for="work_done">Work you have done:</label>
+            <textarea name="work_done" rows="3"></textarea>
+
+            <label for="organization">Organization name:</label>
+            <input type="text" name="organization">
+
+            <div class="right-button">
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    </div>
 
 </body>
 </html>
