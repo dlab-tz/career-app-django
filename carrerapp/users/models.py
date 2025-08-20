@@ -1,4 +1,5 @@
 from django.db import models
+from django_countries.fields import CountryField
 
 class UserProfile(models.Model):
     CAREER_CHOICES = [
@@ -42,7 +43,7 @@ class UserProfile(models.Model):
     phone_no = models.CharField(max_length=20,blank=True ,null=True)
     email = models.EmailField(default='unknown@example.com')
     oversea = models.BooleanField(default=False)
-    country= models.CharField(max_length=100, blank=True, null=True)
+    country= CountryField(blank=True, null=True) 
     education_level = models.CharField(max_length=20, choices=EDUCATION_LEVEL_CHOICES, default='none')
     career_field = models.CharField(max_length=50, choices=CAREER_CHOICES, default='other')
     position = models.CharField(max_length=100, blank=True, null=True)
