@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .models import UserProfile
 from .forms import UserProfileForm
-from django.core.mail import EmailMultiAlternatives
 
 
 # -------------------------------
@@ -34,12 +33,9 @@ def save_profile(request):
             uid = urlsafe_base64_encode(force_bytes(profile.pk))
             token = email_verification_token.make_token(profile)
 
-            # Get current host
-            domain = request.get_host()
-
-            # Use HTTPS if running on ngrok, otherwise HTTP (for localhost/dev)
-            protocol = "https" if "ngrok" in domain else "http"
-            domain = "9e2892574f3c.ngrok-free.app"
+            # Always local development (no ngrok)
+            domain = request.get_host()   # should be 127.0.0.1:8000
+            protocol = "http"             # local dev runs on http
             verification_link = f"{protocol}://{domain}/verify/{uid}/{token}/"
 
             # -----------------------------
@@ -84,6 +80,7 @@ def save_profile(request):
         form = UserProfileForm()
 
     return render(request, "users/form.html", {"form": form})
+
 
 # -------------------------------
 # Verify email
