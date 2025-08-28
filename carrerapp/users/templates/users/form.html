@@ -45,6 +45,9 @@
 
     <form method="post">
         {% csrf_token %}
+
+       <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %} 
         
         <div class="form-section">
           <label for="{{ form.name.id_for_label }}">Name:</label><br>
@@ -97,7 +100,9 @@
       <label for="{{ form.organization.id_for_label }}">Organization name:</label><br>
       {{ form.organization }}<br><br>
 
-      
+       <label for="id_cv">Upload CV:</label><br>
+        <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx">
+      {{ form.cv }}<br><br>
 
     <div class="right-button">
       <button type="submit" class="btn btn-primary">Save</button>

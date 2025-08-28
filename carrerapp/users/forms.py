@@ -15,7 +15,7 @@ class UserProfileForm (forms.ModelForm):
         model = UserProfile
         fields = ['name', 'dob', 'region', 'district','phone_no', 'email',
             'oversea', 'country', 'education_level',
-            'career_field', 'position', 'work_done', 'organization']
+            'career_field', 'position', 'work_done', 'organization', 'upload_cv_file']
         
         widgets = {
              "name":  forms.TextInput(attrs={"class": "form-control"}),
@@ -33,6 +33,7 @@ class UserProfileForm (forms.ModelForm):
             "position":        forms.TextInput(attrs={"class": "form-control"}),
             "work_done":       forms.Textarea(attrs={"class": "form-control", "rows": 3, "id": "work-done"}),
             "organization":    forms.TextInput(attrs={"class": "form-control"}),
+            "upload_cv_file":  forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx'}),
         }
 
     def __init__(self, *args, **kwargs):

@@ -49,6 +49,7 @@ class UserProfile(models.Model):
     position = models.CharField(max_length=100, blank=True, null=True)
     work_done = models.TextField(blank=True, null=True)
     organization = models.CharField(max_length=100, blank=True, null=True)
+    upload_cv_file = models.FileField(upload_to='cvs/', null=True, blank=True)
 
     def __str__(self):
         return self.name

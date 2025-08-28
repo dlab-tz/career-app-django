@@ -4,7 +4,7 @@ from .forms import UserProfileForm
 # Create your views here.
 def add_user_profile(request):
     if request.method == 'POST':
-        form = UserProfileForm(request.POST)
+        form = UserProfileForm(request.POST, request.FILES,)
         if form.is_valid():
          form.save()
          return redirect('add_user_profile')
