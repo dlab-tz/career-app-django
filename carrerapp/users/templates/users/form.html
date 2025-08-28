@@ -104,55 +104,182 @@
             <label for="name">Name:</label>
             <input type="text" name="name" required>
 
-            {% comment %} <label for="dob">Date of Birth:</label>
-            <input type="date" name="dob" required>
-
-            <div class="form-inline">
-                <div>
-                    <label for="region">Region:</label>
-                    <input type="text" name="region" required>
-                </div>
-                <div>
-                    <label for="district">District:</label>
-                    <input type="text" name="district" required>
-                </div>
-            </div>
-
-            <label for="phone_no">Phone No:</label>
-            <input type="text" name="phone_no" required>
-
-            <label for="email">Email:</label>
-            <input type="email" name="email" required>
-
-            <label>Have you studied overseas?</label>
-            <input type="radio" name="oversea" value="yes" onclick="document.getElementById('country').style.display='block';"> Yes
-            <input type="radio" name="oversea" value="no" onclick="document.getElementById('country').style.display='none';"> No
-
-            <div id="country" style="display:none;">
-                <label for="country">Where have you studied:</label>
-                <input type="text" name="country">
-            </div>
-
-            <label for="education_level">Education Level:</label>
-            {{ form.education_level }}
-
-            <label for="career_field">Career Field:</label>
-            {{ form.career_field }}
-
-            <label for="position">Position you held before:</label>
-            <input type="text" name="position">
-
-            <label for="work_done">Work you have done:</label>
-            <textarea name="work_done" rows="3"></textarea>
-
-            <label for="organization">Organization name:</label>
-            <input type="text" name="organization"> {% endcomment %}
-
             <div class="right-button">
                 <button type="submit">Save</button>
             </div>
         </form>
     </div>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-section">
+          <label for="{{ form.name.id_for_label }}">Name:</label><br>
+      {{ form.name }}<br><br>
+
+      <label for="{{ form.dob.id_for_label }}">Date of Birth:</label><br>
+      {{ form.dob }}<br><br>
+
+      <div class="form-inline">
+        <div>
+          <label for="{{ form.region.id_for_label }}">Region:</label><br>
+          {{ form.region }}
+        </div>
+        <div>
+          <label for="{{ form.district.id_for_label }}">District:</label><br>
+          {{ form.district }}
+        </div>
+      </div><br>
+      <div class="form-section">
+        <label for="phone_no">Phone No:</label>
+        <input type="text" id="phone_no" name="phone_no" required>
+        <br><br>
+      </div>
+
+      <label for="{{ form.email.id_for_label }}">Email:</label><br>
+      {{ form.email }}<br><br>
+
+      <!-- Overseas radios -->
+      <div>
+        <label class="form-label">Have you studied overseas?</label><br>
+        <label><input type="radio" name="oversea" value="yes"> Yes</label>
+        <label><input type="radio" name="oversea" value="no" checked> No</label>
+      </div>
+
+      <!-- Country (hidden until oversea=yes) -->
+      <div id="country-group" style="display:none; margin-top:.5rem;">
+        <label for="{{ form.country.id_for_label }}">Where have you studied:</label>
+        {{ form.country }}
+      </div>
+
+      <label for="{{ form.career_field.id_for_label }}">Career Field:</label><br>
+      {{ form.career_field }}<br><br>
+
+      <label for="{{ form.position.id_for_label }}">Position you held before:</label><br>
+      {{ form.position }}<br><br>
+
+      <label for="{{ form.work_done.id_for_label }}">Work you have done:</label><br>
+      {{ form.work_done }}<br><br>
+
+      <label for="{{ form.organization.id_for_label }}">Organization name:</label><br>
+      {{ form.organization }}<br><br>
+
+      
+
+    <div class="right-button">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </form>
+
+<!-- Scripts -->
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  // Shorthands
+  const $ = (s) => document.querySelector(s);
+
+  // === Elements (robust fallbacks for Django-rendered ids/names) ===
+  const countryWrap = $("#country-group") || $("#country") || $("#country-wrapper");
+
+  // Radios rendered like: <input type="radio" name="oversea" value="yes|no">
+  const overseaRadios = Array.from(document.querySelectorAll('input[name="oversea"]'));
+
+  // The country <select> rendered by django-countries (DO NOT touch its options)
+  const countrySel =
+    $("#id_country") || $('select[name="country"]') || $("#country-select");
+
+  // Region/District selects (unchanged)
+  const regionSel   = $("#region-select")   || $("#id_region")   || $('select[name="region"]');
+  const districtSel = $("#district-select") || $("#id_district") || $('select[name="district"]');
+
+  // --- 1) Overseas toggle (works with django-countries) ---
+  function ensurePlaceholder(selectEl) {
+    // If django-countries didn't render an empty choice and you want one, insert it once
+    if (!selectEl) return;
+    const hasBlank = !!selectEl.querySelector('option[value=""]');
+    if (!hasBlank) {
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.textContent = "Select country";
+      // put it at the top without disturbing existing options
+      selectEl.insertBefore(opt, selectEl.firstChild);
+    }
+  }
+
+  function isYes() {
+    const checked = document.querySelector('input[name="oversea"]:checked');
+    if (!checked) return false;
+    const v = String(checked.value).toLowerCase();
+    return v === "yes" || v === "true" || v === "on" || v === "1";
+  }
+
+  function syncOverseaUI() {
+    if (!countryWrap || !countrySel) return;
+    const show = isYes();
+    countryWrap.style.display = show ? "" : "none";
+    countrySel.toggleAttribute("required", show);
+
+    if (show) {
+      // Keep whatever django-countries already selected; just ensure a placeholder exists
+      ensurePlaceholder(countrySel);
+    } else {
+      // Clear value when hidden (prefer blank if present)
+      const blank = countrySel.querySelector('option[value=""]');
+      if (blank) countrySel.value = "";
+      else countrySel.selectedIndex = 0;
+      countrySel.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  }
+
+  // Wire radios
+  overseaRadios.forEach(r => r.addEventListener("change", syncOverseaUI));
+  // Initial state
+  syncOverseaUI();
+
+  // --- 2) Region → District from static JSON (unchanged except for cleanup) ---
+  if (!regionSel || !districtSel) return;
+  if (regionSel.tagName.toLowerCase() !== "select" || districtSel.tagName.toLowerCase() !== "select") return;
+
+  let tzData = {};
+  try {
+    const resp = await fetch("{% static 'geo/tz_regions-districts.json' %}");
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    tzData = await resp.json();
+  } catch (e) {
+    console.error("Failed to load tz_regions-districts.json", e);
+    return;
+  }
+
+  function fill(select, items, placeholder) {
+    select.innerHTML = `<option value="">${placeholder}</option>`;
+    (items || []).forEach(v => {
+      const o = document.createElement("option");
+      o.value = v;
+      o.textContent = v;
+      select.appendChild(o);
+    });
+  }
+
+  // Populate regions
+  fill(regionSel, Object.keys(tzData).sort(), "Select region");
+
+  // Preload districts if editing an existing value
+  if (regionSel.value) {
+    fill(districtSel, tzData[regionSel.value] || [], "Select district");
+  } else {
+    fill(districtSel, [], "Select district");
+  }
+
+  // Update districts when region changes
+  regionSel.addEventListener("change", () => {
+    const list = tzData[regionSel.value] || [];
+    fill(districtSel, list, list.length ? "Select district" : "No districts");
+    districtSel.disabled = list.length === 0;
+  });
+});
+</script>
+  
 
 </body>
 </html>
