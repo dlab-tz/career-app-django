@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 from django_countries.fields import CountryField
 
 class UserProfile(models.Model):
@@ -49,6 +50,10 @@ class UserProfile(models.Model):
     position = models.CharField(max_length=100, blank=True, null=True)
     work_done = models.TextField(blank=True, null=True)
     organization = models.CharField(max_length=100, blank=True, null=True)
+
+
+    is_verified = models.BooleanField(default=False)
+    verification_token = models.UUIDField(default=uuid.uuid4, editable=False)
 
     def __str__(self):
         return self.name
