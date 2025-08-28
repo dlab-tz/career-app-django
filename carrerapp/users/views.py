@@ -7,7 +7,6 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .models import UserProfile
 from .forms import UserProfileForm
 
-
 # -------------------------------
 # Custom token generator
 # -------------------------------
@@ -29,18 +28,14 @@ def save_profile(request):
             profile.is_verified = False
             profile.save()
 
-            # Generate verification token and link
+            # Generate verification link
             uid = urlsafe_base64_encode(force_bytes(profile.pk))
             token = email_verification_token.make_token(profile)
-
-            # Always local development (no ngrok)
-            domain = request.get_host()   # should be 127.0.0.1:8000
-            protocol = "http"             # local dev runs on http
+            domain = request.get_host()
+            protocol = "http"  # or "https" in production
             verification_link = f"{protocol}://{domain}/verify/{uid}/{token}/"
 
-            # -----------------------------
-            # Send email with HTML + text
-            # -----------------------------
+            # Email content
             subject = "Verify Your Carrier Portal Profile"
             from_email = settings.DEFAULT_FROM_EMAIL
             to = [profile.email]
@@ -53,29 +48,36 @@ def save_profile(request):
 
             html_content = f"""
             <html>
-              <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <body style="font-family: Arial, sans-serif; line-height: 1.6;">
                 <h2 style="color:#2c3e50;">Hi {profile.name},</h2>
                 <p>Please verify your email by clicking the button below:</p>
                 <p style="text-align:center;">
-                  <a href="{verification_link}" 
-                     style="background-color:#3498db; color:#fff; padding:12px 20px; 
-                            text-decoration:none; border-radius:5px; font-weight:bold;">
-                    Verify My Email
-                  </a>
+                    <a href="{verification_link}" 
+                       style="background-color:#3498db; color:#fff; padding:12px 20px; 
+                              text-decoration:none; border-radius:5px; font-weight:bold;">
+                        Verify My Email
+                    </a>
                 </p>
                 <p>If the button doesn’t work, copy and paste this link into your browser:</p>
                 <p><a href="{verification_link}">{verification_link}</a></p>
                 <br>
                 <p>Thank you,<br>The Carrier Portal Team</p>
-              </body>
+            </body>
             </html>
             """
 
+            # Send email
             msg = EmailMultiAlternatives(subject, text_content, from_email, to)
             msg.attach_alternative(html_content, "text/html")
-            msg.send()
+            try:
+                msg.send()
+                print(f"[INFO] Verification email sent to {profile.email}")
+            except Exception as e:
+                print("[ERROR] Email sending failed:", e)
 
             return render(request, "users/success.html", {"email": profile.email})
+        else:
+            print("[ERROR] Form is invalid:", form.errors)
     else:
         form = UserProfileForm()
 
@@ -83,7 +85,7 @@ def save_profile(request):
 
 
 # -------------------------------
-# Verify email
+# Verify email link
 # -------------------------------
 def verify_email(request, uidb64, token):
     try:

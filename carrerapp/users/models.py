@@ -1,9 +1,6 @@
 from django.db import models
-<<<<<<< HEAD
 import uuid
-=======
 from django_countries.fields import CountryField
->>>>>>> origin/main
 
 class UserProfile(models.Model):
     CAREER_CHOICES = [
