@@ -22,7 +22,7 @@ email_verification_token = EmailVerificationTokenGenerator()
 # -------------------------------
 def save_profile(request):
     if request.method == "POST":
-        form = UserProfileForm(request.POST)
+        form = UserProfileForm(request.POST, request.FILES,)
         if form.is_valid():
             profile = form.save(commit=False)
             profile.is_verified = False
