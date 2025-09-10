@@ -145,7 +145,7 @@
             {{ form.email }}
 
             <div>
-                <label class="form-label">Have you studied overseas?</label>
+            <label class="form-label">Have you studied overseas?</label>
                 <label><input type="radio" name="oversea" value="yes"> Yes</label>
                 <label><input type="radio" name="oversea" value="no" checked> No</label>
             </div>
@@ -169,7 +169,11 @@
 
             <label for="{{ form.organization.id_for_label }}">Organization name:</label>
             {{ form.organization }}
-
+            <div class="form-section">
+                <label for="id_linkedin">LinkedIn Profile:</label>
+                {{ form.linkedin }}
+            </div>
+            
             <div class="right-button">
                 <button type="submit">Save</button>
             </div>

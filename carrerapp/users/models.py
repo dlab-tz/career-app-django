@@ -50,7 +50,7 @@ class UserProfile(models.Model):
     position = models.CharField(max_length=100, blank=True, null=True)
     work_done = models.TextField(blank=True, null=True)
     organization = models.CharField(max_length=100, blank=True, null=True)
-
+    linkedin = models.URLField(max_length=200, blank=True, null=True, help_text="Enter your LinkedIn profile URL")
 
     is_verified = models.BooleanField(default=False)
     verification_token = models.UUIDField(default=uuid.uuid4, editable=False)

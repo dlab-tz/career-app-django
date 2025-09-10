@@ -15,7 +15,7 @@ class UserProfileForm (forms.ModelForm):
         model = UserProfile
         fields = ['name', 'dob', 'region', 'district','phone_no', 'email',
             'oversea', 'country', 'education_level',
-            'career_field', 'position', 'work_done', 'organization']
+            'career_field', 'position', 'work_done', 'organization','linkedin']
         
         widgets = {
              "name":  forms.TextInput(attrs={"class": "form-control"}),
@@ -25,7 +25,7 @@ class UserProfileForm (forms.ModelForm):
             "region":   forms.Select(attrs={"id": "region-select", "class": "form-select"}),
             "district": forms.Select(attrs={"id": "district-select", "class": "form-select"}),
 
-            "oversea":  forms.CheckboxInput(attrs={"id": "oversea-check", "class": "form-check-input"}),
+            'oversea': forms.RadioSelect(choices=[('yes', 'Yes'), ('no', 'No')]),
             "country":  CountrySelectWidget(attrs={"id": "country-select", "class": "form-select"}),
 
             "education_level": forms.Select(attrs={"class": "form-select"}),
@@ -34,9 +34,16 @@ class UserProfileForm (forms.ModelForm):
             "work_done":       forms.Textarea(attrs={"class": "form-control", "rows": 3, "id": "work-done"}),
             "organization":    forms.TextInput(attrs={"class": "form-control"}),
         }
-
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Default country = Tanzania
         self.fields["region"].choices = [("", "Select region")]
         self.fields["district"].choices = [("", "Select district")]
+    def clean_linkedin(self):
+        linkedin_url = self.cleaned_data.get("linkedin")
+        if linkedin_url and not re.match(r'^https:\/\/(www\.)?linkedin\.com\/.*$', linkedin_url):
+            raise forms.ValidationError(
+             "Please enter a valid LinkedIn profile URL (e.g., https://www.linkedin.com/in/username)."
+            )
+        return linkedin_url
